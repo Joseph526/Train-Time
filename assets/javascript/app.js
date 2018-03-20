@@ -21,10 +21,25 @@ $(document).ready(function() {
     // Declare functions
     var trainScheduler = {
         
-        // Database listener for initial records
+        // Database listener for existing records
         dataLoader: function() {
             database.ref().on("child_added", function(childSnapshot) {
-                console.log();
+                console.log(childSnapshot.val().trainName);
+                console.log(childSnapshot.val().trainDest);
+                console.log(childSnapshot.val().trainFirstTime);
+                console.log(childSnapshot.val().trainFreq);
+
+                // Append records to table
+                // Get reference to tbody element, create new row
+                var tBody = $("tbody");
+                var tRow = $("<tr>");
+
+                // Assemble td elements, append to tr, then append tr to tbody
+                var trainNameTd = $("<td>").text(childSnapshot.val().trainName);
+                var trainDestTd = $("<td>").text(childSnapshot.val().trainDest);
+                var trainFreqTd = $("<td>").text(childSnapshot.val().trainFreq);
+                tRow.append(trainNameTd, trainDestTd, trainFreqTd);
+                tBody.append(tRow);
             });
         },
 
@@ -47,23 +62,15 @@ $(document).ready(function() {
             });
         }
     }
-
     
-
-
-    
-
-
-
     // Execute functions
 
     // Populate train schedule table on load
-
-
+    trainScheduler.dataLoader();
 
     // Submit button to add new train
     $("#submitButton").on("click", function(event) {
         event.preventDefault();
         trainScheduler.addRecord();
-    })
+    });
 });
