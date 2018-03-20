@@ -11,6 +11,29 @@ $(document).ready(function() {
     firebase.initializeApp(config);
     var database = firebase.database();
 
+    // Declare global variables
+    var trainName = "";
+    var trainDest = "";
+    var trainFirstTime = "";
+    var trainFreq = "";
+
+
+    // Declare functions
+
+    // Database listener for initial records
+
+
+    // Add record to database
+
+
+
+    // Execute functions
+
+    // Populate train schedule table on load
+
+
+
+    // Submit button to add new train
     $("#submitButton").on("click", function(event) {
         event.preventDefault();
     })
