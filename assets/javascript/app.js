@@ -15,15 +15,43 @@ $(document).ready(function() {
     var trainName = "";
     var trainDest = "";
     var trainFirstTime = "";
-    var trainFreq = "";
+    var trainFreq = 0;
 
 
     // Declare functions
+    var trainScheduler = {
+        
+        // Database listener for initial records
+        dataLoader: function() {
+            database.ref().on("child_added", function(childSnapshot) {
+                console.log();
+            });
+        },
 
-    // Database listener for initial records
+        // Add record to database
+        addRecord: function() {
+            
+            // Capture user input
+            trainName = $("#addTrain").val().trim();
+            trainDest = $("#addDest").val().trim();
+            trainFirstTime = $("#addFirstTime").val().trim();
+            trainFreq = $("#addFreq").val().trim();
+
+            // Code for the push
+            database.ref().push({
+                trainName: trainName,
+                trainDest: trainDest,
+                trainFirstTime: trainFirstTime,
+                trainFreq: trainFreq,
+                dateAdded: firebase.database.ServerValue.TIMESTAMP
+            });
+        }
+    }
+
+    
 
 
-    // Add record to database
+    
 
 
 
@@ -36,5 +64,6 @@ $(document).ready(function() {
     // Submit button to add new train
     $("#submitButton").on("click", function(event) {
         event.preventDefault();
+        trainScheduler.addRecord();
     })
 });
