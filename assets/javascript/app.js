@@ -24,21 +24,26 @@ $(document).ready(function() {
         // Database listener for existing records
         dataLoader: function() {
             database.ref().on("child_added", function(childSnapshot) {
-                console.log(childSnapshot.val().trainName);
-                console.log(childSnapshot.val().trainDest);
-                console.log(childSnapshot.val().trainFirstTime);
-                console.log(childSnapshot.val().trainFreq);
-
+                
                 // Append records to table
                 // Get reference to tbody element, create new row
                 var tBody = $("tbody");
                 var tRow = $("<tr>");
 
+                // Calculate certain fields using Moment.js
+                var trainFirstTimeConverted = moment(childSnapshot.val().trainFirstTime, "HH:mm").subtract(1, "days");
+                var diffTime = moment().diff(moment(trainFirstTimeConverted), "minutes");
+                var remainder = diffTime % childSnapshot.val().trainFreq;
+                var trainAway = childSnapshot.val().trainFreq - remainder;
+                var trainNext = moment().add(trainAway, "minutes").format("hh:mm A");
+
                 // Assemble td elements, append to tr, then append tr to tbody
                 var trainNameTd = $("<td>").text(childSnapshot.val().trainName);
                 var trainDestTd = $("<td>").text(childSnapshot.val().trainDest);
                 var trainFreqTd = $("<td>").text(childSnapshot.val().trainFreq);
-                tRow.append(trainNameTd, trainDestTd, trainFreqTd);
+                var trainNextTd = $("<td>").text(trainNext);
+                var trainAwayTd = $("<td>").text(trainAway);
+                tRow.append(trainNameTd, trainDestTd, trainFreqTd, trainNextTd, trainAwayTd);
                 tBody.append(tRow);
             });
         },
@@ -50,7 +55,7 @@ $(document).ready(function() {
             trainName = $("#addTrain").val().trim();
             trainDest = $("#addDest").val().trim();
             trainFirstTime = $("#addFirstTime").val().trim();
-            trainFreq = $("#addFreq").val().trim();
+            trainFreq = parseInt($("#addFreq").val().trim());
 
             // Code for the push
             database.ref().push({
@@ -61,7 +66,7 @@ $(document).ready(function() {
                 dateAdded: firebase.database.ServerValue.TIMESTAMP
             });
         }
-    }
+    };
     
     // Execute functions
 
