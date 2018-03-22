@@ -57,6 +57,13 @@ $(document).ready(function() {
             trainFirstTime = $("#addFirstTime").val().trim();
             trainFreq = parseInt($("#addFreq").val().trim());
 
+            // Clear the input boxes for next input
+            $("#addTrain").val("");
+            $("#addDest").val("");
+            $("#addFirstTime").val("");
+            $("#addFreq").val("");
+            $("#addTrain").focus();
+
             // Code for the push
             database.ref().push({
                 trainName: trainName,
@@ -72,6 +79,7 @@ $(document).ready(function() {
 
     // Populate train schedule table on load
     trainScheduler.dataLoader();
+    $("#addTrain").focus();
 
     // Submit button to add new train
     $("#submitButton").on("click", function(event) {
